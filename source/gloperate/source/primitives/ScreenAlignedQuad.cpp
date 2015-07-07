@@ -6,6 +6,7 @@
 
 #include <glbinding/gl/enum.h>
 #include <glbinding/gl/functions.h>
+#include <glbinding/gl/typeintegrations.h>
 
 #include <globjects/base/StaticStringSource.h>
 #include <globjects/Program.h>
