@@ -65,6 +65,10 @@ bool AbstractStage::isAlwaysProcess() const
 
 void AbstractStage::setAlwaysProcess(bool alwaysProcess)
 {
+    if (!m_alwaysProcess && alwaysProcess) {
+        processScheduled();
+    }
+
     m_alwaysProcess = alwaysProcess;
 }
 
@@ -195,6 +199,7 @@ bool AbstractStage::requires(const AbstractStage * stage, bool recursive) const
 void AbstractStage::scheduleProcess()
 {
     m_processScheduled = true;
+    processScheduled();
 }
 
 void AbstractStage::init()

@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QWindow>
+#include <QDebug>
 #include <gloperate/ext-includes-end.h>
 
 #include <glbinding/gl/functions.h>
@@ -20,6 +21,7 @@
 #include <gloperate/painter/AbstractInputCapability.h>
 #include <gloperate/rendering/AbstractStage.h>
 #include <gloperate/rendering/ViewportComponent.h>
+#include <gloperate/rendering/VirtualTimeComponent.h>
 #include <gloperate/resources/ResourceManager.h>
 #include <gloperate/tools/ImageExporter.h>
 
@@ -113,20 +115,18 @@ void QtOpenGLWindow::setRenderer(gloperate::glop2::AbstractStage * renderer)
     // Save renderer
     m_renderer = renderer;
 
-    // Destroy old time propagator
+    // Destroy time propagator (only used for painters, remove when painters are gone)
     m_timePropagator = nullptr;
+
+    // Stop frame timer
+    m_timer.stop();
 
     // Abort if no renderer is set
     if (!m_renderer)
         return;
 
-    // Create new time propagator
-    m_timePropagator = make_unique<TimePropagator>(this);
-    /*
-    if (m_renderer->supports<VirtualTimeComponent>()) {
-        m_timePropagator->setCapability(m_painter->getCapability<AbstractVirtualTimeCapability>());
-    }
-    */
+    // Start frame timer
+    m_timer.start();
 
     // Initialize renderer prior to first draw
     m_initialized = false;
@@ -161,17 +161,34 @@ void QtOpenGLWindow::onInitialize()
     // Initialize renderer
     if (m_renderer)
     {
-        // Initialize viewport
+        // Connect viewport component
         ViewportComponent * viewportComponent = m_renderer->component<ViewportComponent>();
         if (viewportComponent)
         {
-            // Set viewport on renderer
             qreal factor = QWindow::devicePixelRatio();
             m_viewport         = glm::vec4(0, 0, (int)(factor * width()), (int)(factor * height()));
             m_devicePixelRatio = glm::vec2(factor, factor);
             viewportComponent->m_viewport         = m_viewport;
             viewportComponent->m_devicePixelRatio = m_devicePixelRatio;
         }
+
+        // Connect virtual time component
+        VirtualTimeComponent * virtualTimeComponent = m_renderer->component<VirtualTimeComponent>();
+        if (virtualTimeComponent)
+        {
+            m_virtualTime = 0.0f;
+            m_timeDelta   = 0.0f;
+            m_fps         = 0.0f;
+            virtualTimeComponent->m_virtualTime = m_virtualTime;
+            virtualTimeComponent->m_timeDelta   = m_timeDelta;
+            virtualTimeComponent->m_fps         = m_fps;
+        }
+
+        // Update when manual redraw is triggered
+        m_renderer->processScheduled.connect([this]()
+        {
+            this->updateGL();
+        } );
 
         // Initialize renderer
         m_renderer->init();
@@ -195,16 +212,27 @@ void QtOpenGLWindow::onResize(QResizeEvent * event)
     qreal factor = QWindow::devicePixelRatio();
     m_viewport         = glm::vec4(0, 0, (int)(factor * event->size().width()), (int)(factor * event->size().height()));
     m_devicePixelRatio = glm::vec2(factor, factor);
+
+    // Trigger redraw
+    if (m_renderer) {
+        updateGL();
+    }
 }
 
 void QtOpenGLWindow::onPaint()
 {
+    // Calculate time delta
+    float delta = std::chrono::duration_cast<std::chrono::duration<float>>(m_timer.elapsed()).count();
+    m_timer.reset();
+
+    // Promote time information to renderer
+    m_virtualTime = m_virtualTime.data() + delta;
+    m_timeDelta   = delta;
+    m_fps         = 1.0f / delta;
+
     // Update script timers
-    if (m_timerApi && m_painter) {
-        AbstractVirtualTimeCapability * virtualTimeCapability = m_painter->getCapability<AbstractVirtualTimeCapability>();
-        if (virtualTimeCapability) {
-            m_timerApi->tickUpdate(virtualTimeCapability->delta());
-        }
+    if (m_timerApi) {
+        m_timerApi->tickUpdate(delta);
     }
 
     // Execute rendering
@@ -216,6 +244,11 @@ void QtOpenGLWindow::onPaint()
     {
         // Call renderer
         m_renderer->execute();
+
+        // Repaint immediately for continuous rendering
+        if (m_renderer->isAlwaysProcess()) {
+            updateGL();
+        }
     }
     else
     {

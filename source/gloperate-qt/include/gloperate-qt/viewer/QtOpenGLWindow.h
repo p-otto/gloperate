@@ -10,6 +10,7 @@
 
 #include <globjects/base/ref_ptr.h>
 
+#include <gloperate/base/ChronoTimer.h>
 #include <gloperate/painter/Painter.h>
 #include <gloperate/rendering/Data.h>
 
@@ -141,9 +142,13 @@ protected:
     gloperate::Painter              * m_painter;          ///< Currently used painter
     gloperate::glop2::AbstractStage * m_renderer;         ///< Rendering stage, can be nullptr
     std::unique_ptr<TimePropagator>   m_timePropagator;   ///< Time propagator for continous updates
+    gloperate::ChronoTimer            m_timer;            ///< Time measurement
     TimerApi                        * m_timerApi;         ///< Scripting timer API
     gloperate::glop2::Data<glm::vec4> m_viewport;         ///< Viewport coordinates (x, y, w, h) in real device coordinates
     gloperate::glop2::Data<glm::vec2> m_devicePixelRatio; ///< Ratio of device pixels to virtual pixels (keep in mind that m_viewport is already expressed in device pixels!)
+    gloperate::glop2::Data<float>     m_virtualTime;      ///< Virtual time (in seconds)
+    gloperate::glop2::Data<float>     m_timeDelta;        ///< Time difference since the last frame (in seconds)
+    gloperate::glop2::Data<float>     m_fps;              ///< Current frames per second
 };
 
 

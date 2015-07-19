@@ -62,6 +62,7 @@ class GLOPERATE_API AbstractStage : public reflectionzeug::Object
 {
 public:
     signalzeug::Signal<> dependenciesChanged;
+    signalzeug::Signal<> processScheduled;
 
 
 public:

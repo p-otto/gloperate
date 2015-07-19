@@ -138,6 +138,7 @@ Viewer::Viewer(QWidget * parent, Qt::WindowFlags flags)
     // Initialize plugin manager
     m_pluginManager.reset(new PluginManager());
     m_pluginManager->pluginsChanged.connect(this, &Viewer::updatePainterMenu);
+    m_pluginManager->pluginsChanged.connect(this, &Viewer::updateRendererMenu);
 
     // Restore plugin paths from settings
     auto paths = fromQStringList(settings.value(SETTINGS_PLUGINS).toStringList());
@@ -154,6 +155,13 @@ Viewer::Viewer(QWidget * parent, Qt::WindowFlags flags)
         m_pluginManager->scan("painters");
     #else
         m_pluginManager->scan("paintersd");
+    #endif
+
+    // Scan all plugins with name component 'renderers'
+    #ifdef NDEBUG
+        m_pluginManager->scan("renderers");
+    #else
+        m_pluginManager->scan("renderersd");
     #endif
 
     // Setup scripting context

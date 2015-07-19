@@ -20,6 +20,8 @@ class GLOPERATE_API VirtualTimeComponent : public AbstractComponent
 {
 public:
     InputSlot<float> m_virtualTime;     ///< Virtual time (in seconds)
+    InputSlot<float> m_timeDelta;       ///< Time difference since the last frame (in seconds)
+    InputSlot<float> m_fps;             ///< Current frames per second
 
 
 public:
