@@ -118,7 +118,8 @@ set(sources
     ${source_path}/rendering/AbstractStage.cpp
     ${source_path}/rendering/AbstractComponent.cpp
     ${source_path}/rendering/ViewportComponent.cpp
-    
+    ${source_path}/rendering/VirtualTimeComponent.cpp
+
     ${source_path}/plugin/PluginManager.cpp
     ${source_path}/plugin/PluginLibrary.cpp
     ${source_path}/plugin/Plugin.cpp
@@ -231,6 +232,7 @@ set(api_includes
     ${include_path}/rendering/AbstractStage.hpp
     ${include_path}/rendering/AbstractComponent.h
     ${include_path}/rendering/ViewportComponent.h
+    ${include_path}/rendering/VirtualTimeComponent.h
     
     ${include_path}/plugin/plugin_api.h
     ${include_path}/plugin/PluginManager.h
