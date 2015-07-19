@@ -111,6 +111,11 @@ set(sources
     ${source_path}/pipeline/AbstractStage.cpp
     ${source_path}/pipeline/AbstractPipeline.cpp
     ${source_path}/pipeline/AbstractData.cpp
+
+    ${source_path}/rendering/AbstractData.cpp
+    ${source_path}/rendering/AbstractInputSlot.cpp
+    ${source_path}/rendering/InputSlot.cpp
+    ${source_path}/rendering/AbstractStage.cpp
     
     ${source_path}/plugin/PluginManager.cpp
     ${source_path}/plugin/PluginLibrary.cpp
@@ -212,6 +217,14 @@ set(api_includes
     ${include_path}/pipeline/AbstractPipeline.h
     ${include_path}/pipeline/Data.h
     ${include_path}/pipeline/AbstractInputSlot.h
+
+    ${include_path}/rendering/AbstractData.h
+    ${include_path}/rendering/Data.h
+    ${include_path}/rendering/Data.hpp
+    ${include_path}/rendering/AbstractInputSlot.h
+    ${include_path}/rendering/InputSlot.h
+    ${include_path}/rendering/InputSlot.hpp
+    ${include_path}/rendering/AbstractStage.h
     
     ${include_path}/plugin/plugin_api.h
     ${include_path}/plugin/PluginManager.h
