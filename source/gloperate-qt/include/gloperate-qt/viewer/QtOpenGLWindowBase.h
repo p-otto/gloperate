@@ -73,6 +73,18 @@ public:
 
     /**
     *  @brief
+    *    Make associated OpenGL context current
+    */
+    void makeCurrent();
+
+    /**
+    *  @brief
+    *    Release associated OpenGL context
+    */
+    void doneCurrent();
+
+    /**
+    *  @brief
     *    Request update (repaint) of the window
     */
     void updateGL();
@@ -82,9 +94,6 @@ public:
     *    Initialize OpenGL rendering
     */
     void initialize();
-
-	void makeCurrent();
-	void doneCurrent();
 
 
 protected:

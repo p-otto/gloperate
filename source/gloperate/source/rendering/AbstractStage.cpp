@@ -21,7 +21,10 @@ AbstractStage::AbstractStage(const std::string & name)
 , m_processScheduled(false)
 , m_name(name)
 {
-    dependenciesChanged.connect([this]() { m_usable.invalidate(); });
+    dependenciesChanged.connect([this]()
+    {
+        m_usable.invalidate();
+    } );
 }
 
 AbstractStage::~AbstractStage()
@@ -149,6 +152,16 @@ void AbstractStage::invalidateOutputs()
     {
         output->invalidate();
     }
+}
+
+const std::vector<AbstractComponent*> & AbstractStage::components() const
+{
+    return m_components;
+}
+
+void AbstractStage::addComponent(AbstractComponent & component)
+{
+    m_components.push_back(&component);
 }
 
 void AbstractStage::addDependency(AbstractStage * stage)

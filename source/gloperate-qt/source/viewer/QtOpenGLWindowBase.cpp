@@ -76,6 +76,16 @@ QOpenGLContext *QtOpenGLWindowBase::context() const
     return m_context.data();
 }
 
+void QtOpenGLWindowBase::makeCurrent()
+{
+    m_context->makeCurrent(this);
+}
+
+void QtOpenGLWindowBase::doneCurrent()
+{
+    m_context->doneCurrent();
+}
+
 void QtOpenGLWindowBase::updateGL()
 {
     if (!m_updatePending) {
@@ -177,16 +187,6 @@ void QtOpenGLWindowBase::enterEvent(QEvent *)
 
 void QtOpenGLWindowBase::leaveEvent(QEvent *)
 {
-}
-
-void QtOpenGLWindowBase::makeCurrent()
-{
-    m_context->makeCurrent(this);
-}
-
-void QtOpenGLWindowBase::doneCurrent()
-{
-    m_context->doneCurrent();
 }
 
 

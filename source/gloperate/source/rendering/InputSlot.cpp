@@ -1,5 +1,5 @@
 
-#include <gloperate/pipeline/InputSlot.h>
+#include <gloperate/rendering/InputSlot.h>
 
 #include <iostream>
 
@@ -17,9 +17,9 @@ void printIncompatibleMessage(
 {
     std::cout
         << "Trying to connect incompatible type "
-        << data.qualifiedName() << " (" << data.type() << ")"
+        << data.name() << " (" << data.type() << ")"
         << " to "
-        << slot->qualifiedName() << " (" << typeName << ")"
+        << slot->name() << " (" << typeName << ")"
         << std::endl;
 }
 

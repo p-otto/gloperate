@@ -116,6 +116,8 @@ set(sources
     ${source_path}/rendering/AbstractInputSlot.cpp
     ${source_path}/rendering/InputSlot.cpp
     ${source_path}/rendering/AbstractStage.cpp
+    ${source_path}/rendering/AbstractComponent.cpp
+    ${source_path}/rendering/ViewportComponent.cpp
     
     ${source_path}/plugin/PluginManager.cpp
     ${source_path}/plugin/PluginLibrary.cpp
@@ -225,6 +227,9 @@ set(api_includes
     ${include_path}/rendering/InputSlot.h
     ${include_path}/rendering/InputSlot.hpp
     ${include_path}/rendering/AbstractStage.h
+    ${include_path}/rendering/AbstractStage.hpp
+    ${include_path}/rendering/AbstractComponent.h
+    ${include_path}/rendering/ViewportComponent.h
     
     ${include_path}/plugin/plugin_api.h
     ${include_path}/plugin/PluginManager.h

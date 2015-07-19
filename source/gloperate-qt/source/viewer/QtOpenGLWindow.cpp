@@ -36,6 +36,7 @@ namespace gloperate_qt
 QtOpenGLWindow::QtOpenGLWindow(gloperate::ResourceManager & resourceManager)
 : m_resourceManager(resourceManager)
 , m_painter(nullptr)
+, m_renderer(nullptr)
 , m_timePropagator(nullptr)
 , m_timerApi(nullptr)
 {
@@ -49,6 +50,7 @@ QtOpenGLWindow::QtOpenGLWindow(gloperate::ResourceManager & resourceManager, con
 : QtOpenGLWindowBase(format)
 , m_resourceManager(resourceManager)
 , m_painter(nullptr)
+, m_renderer(nullptr)
 , m_timePropagator(nullptr)
 , m_timerApi(nullptr)
 {
@@ -93,6 +95,15 @@ void QtOpenGLWindow::setPainter(Painter * painter)
         m_timePropagator->setCapability(m_painter->getCapability<AbstractVirtualTimeCapability>());
 
     m_initialized = false;
+}
+
+gloperate::glop2::AbstractStage * QtOpenGLWindow::renderer() const
+{
+    return m_renderer;
+}
+
+void QtOpenGLWindow::setRenderer(gloperate::glop2::AbstractStage * /*renderer*/)
+{
 }
 
 void QtOpenGLWindow::setTimerApi(TimerApi * timerApi)

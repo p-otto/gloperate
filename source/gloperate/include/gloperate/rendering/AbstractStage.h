@@ -2,8 +2,9 @@
 #pragma once
 
 
-#include <set>
 #include <string>
+#include <vector>
+#include <set>
 
 #include <signalzeug/Signal.h>
 
@@ -20,6 +21,7 @@ namespace glop2
 
 class AbstractInputSlot;
 class AbstractData;
+class AbstractComponent;
 
 
 /**
@@ -80,8 +82,12 @@ public:
     std::set<AbstractData*> allOutputs() const;
     void addOutput(const std::string & name, AbstractData & output);
     void shareOutput(AbstractData * output);
-
     void invalidateOutputs();
+
+    const std::vector<AbstractComponent*> & components() const;
+    void addComponent(AbstractComponent & component);
+    template <typename ComponentType> bool supports() const;
+    template <typename ComponentType> ComponentType * component() const;
 
     void addDependency(AbstractStage * stage);
 
@@ -107,13 +113,14 @@ protected:
     bool m_processScheduled;
     std::string m_name;
 
-    globjects::CachedValue<bool> m_usable;
-
-    std::set<AbstractData*>      m_outputs;
-    std::set<AbstractData*>      m_sharedOutputs;
-    std::set<AbstractInputSlot*> m_inputs;
-    std::set<AbstractInputSlot*> m_sharedInputs;
-    std::set<AbstractStage*>     m_dependencies;    ///< Additional manual dependencies not expressed by data connections
+    globjects::CachedValue<bool>    m_usable;
+ 
+    std::set<AbstractData*>         m_outputs;
+    std::set<AbstractData*>         m_sharedOutputs;
+    std::set<AbstractInputSlot*>    m_inputs;
+    std::set<AbstractInputSlot*>    m_sharedInputs;
+    std::set<AbstractStage*>        m_dependencies;    ///< Additional manual dependencies not expressed by data connections
+    std::vector<AbstractComponent*> m_components;      ///< List of provided components
 
 
 private:
@@ -123,3 +130,6 @@ private:
 
 } // namespace glop2
 } // namespace gloperate
+
+
+#include <gloperate/rendering/AbstractStage.hpp>

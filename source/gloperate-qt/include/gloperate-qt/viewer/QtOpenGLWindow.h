@@ -12,9 +12,11 @@
 #include <gloperate-qt/viewer/TimePropagator.h>
 
 
-namespace gloperate
-{
+namespace gloperate {
     class ResourceManager;
+    namespace glop2 {
+        class AbstractStage;
+    }
 }
 
 
@@ -29,10 +31,13 @@ class TimerApi;
 *  @brief
 *    Qt window that can be used for rendering with gloperate and OpenGL
 *
-*    This is the main rendering widget that displays a gloperate::Painter
-*    within a Qt application. It contains only the rendering widget itself,
-*    no other components. For a fully-fledged application template, see
-*    gloperate_qt::Viewer.
+*    This is the main rendering widget that displays a gloperate::AbstractStage
+*    within a Qt application. For that to work, the stage has to provide at least
+*    a ViewportComponent, to support screenshots, it also has to provide an
+*    FramebufferComponent.
+*
+*    This class contains only the rendering widget itself, no other GUI elements.
+*    For a fully-fledged application template, see gloperate_qt::Viewer.
 */
 class GLOPERATE_QT_API QtOpenGLWindow : public QtOpenGLWindowBase
 {
@@ -83,6 +88,24 @@ public:
 
     /**
     *  @brief
+    *    Get stage used for rendering into the widget
+    *
+    *  @return
+    *    Rendering stage, can be nullptr
+    */
+    gloperate::glop2::AbstractStage * renderer() const;
+
+    /**
+    *  @brief
+    *    Set stage used for rendering into the widget
+    *
+    *  @param[in] renderer
+    *    Rendering stage, can be nullptr
+    */
+    void setRenderer(gloperate::glop2::AbstractStage * renderer);
+
+    /**
+    *  @brief
     *    Set scripting timer API
     *
     *  @param[in] timerAPI
@@ -109,10 +132,11 @@ protected:
 
 
 protected:
-    gloperate::ResourceManager & m_resourceManager;
-    gloperate::Painter * m_painter;                    ///< Currently used painter
-    std::unique_ptr<TimePropagator> m_timePropagator;  ///< Time propagator for continous updates
-    TimerApi * m_timerApi;                             ///< Scripting timer API
+    gloperate::ResourceManager      & m_resourceManager; ///< Resource manager for loading assets
+    gloperate::Painter              * m_painter;         ///< Currently used painter
+    gloperate::glop2::AbstractStage * m_renderer;        ///< Rendering stage, can be nullptr
+    std::unique_ptr<TimePropagator>   m_timePropagator;  ///< Time propagator for continous updates
+    TimerApi                        * m_timerApi;        ///< Scripting timer API
 };
 
 
