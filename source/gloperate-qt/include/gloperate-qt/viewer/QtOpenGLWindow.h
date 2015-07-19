@@ -4,9 +4,14 @@
 
 #include <memory>
 
+#include <gloperate/ext-includes-begin.h>
+#include <glm/glm.hpp>
+#include <gloperate/ext-includes-end.h>
+
 #include <globjects/base/ref_ptr.h>
 
 #include <gloperate/painter/Painter.h>
+#include <gloperate/rendering/Data.h>
 
 #include <gloperate-qt/viewer/QtOpenGLWindowBase.h>
 #include <gloperate-qt/viewer/TimePropagator.h>
@@ -132,11 +137,13 @@ protected:
 
 
 protected:
-    gloperate::ResourceManager      & m_resourceManager; ///< Resource manager for loading assets
-    gloperate::Painter              * m_painter;         ///< Currently used painter
-    gloperate::glop2::AbstractStage * m_renderer;        ///< Rendering stage, can be nullptr
-    std::unique_ptr<TimePropagator>   m_timePropagator;  ///< Time propagator for continous updates
-    TimerApi                        * m_timerApi;        ///< Scripting timer API
+    gloperate::ResourceManager      & m_resourceManager;  ///< Resource manager for loading assets
+    gloperate::Painter              * m_painter;          ///< Currently used painter
+    gloperate::glop2::AbstractStage * m_renderer;         ///< Rendering stage, can be nullptr
+    std::unique_ptr<TimePropagator>   m_timePropagator;   ///< Time propagator for continous updates
+    TimerApi                        * m_timerApi;         ///< Scripting timer API
+    gloperate::glop2::Data<glm::vec4> m_viewport;         ///< Viewport coordinates (x, y, w, h) in real device coordinates
+    gloperate::glop2::Data<glm::vec2> m_devicePixelRatio; ///< Ratio of device pixels to virtual pixels (keep in mind that m_viewport is already expressed in device pixels!)
 };
 
 

@@ -95,6 +95,7 @@ public:
 
     void scheduleProcess();
 
+    void init();
     bool execute();
 
 

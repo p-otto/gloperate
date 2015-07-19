@@ -195,6 +195,11 @@ void AbstractStage::scheduleProcess()
     m_processScheduled = true;
 }
 
+void AbstractStage::init()
+{
+    initialize();
+}
+
 bool AbstractStage::execute()
 {
     if (!m_enabled)

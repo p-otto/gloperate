@@ -18,6 +18,8 @@
 #include <gloperate/base/make_unique.hpp>
 #include <gloperate/painter/AbstractViewportCapability.h>
 #include <gloperate/painter/AbstractInputCapability.h>
+#include <gloperate/rendering/AbstractStage.h>
+#include <gloperate/rendering/ViewportComponent.h>
 #include <gloperate/resources/ResourceManager.h>
 #include <gloperate/tools/ImageExporter.h>
 
@@ -26,8 +28,12 @@
 
 
 using namespace gloperate;
+using namespace gloperate::glop2;
+
+
 namespace gloperate_qt
 {
+
 
 /**
 *  @brief
@@ -102,8 +108,28 @@ gloperate::glop2::AbstractStage * QtOpenGLWindow::renderer() const
     return m_renderer;
 }
 
-void QtOpenGLWindow::setRenderer(gloperate::glop2::AbstractStage * /*renderer*/)
+void QtOpenGLWindow::setRenderer(gloperate::glop2::AbstractStage * renderer)
 {
+    // Save renderer
+    m_renderer = renderer;
+
+    // Destroy old time propagator
+    m_timePropagator = nullptr;
+
+    // Abort if no renderer is set
+    if (!m_renderer)
+        return;
+
+    // Create new time propagator
+    m_timePropagator = make_unique<TimePropagator>(this);
+    /*
+    if (m_renderer->supports<VirtualTimeComponent>()) {
+        m_timePropagator->setCapability(m_painter->getCapability<AbstractVirtualTimeCapability>());
+    }
+    */
+
+    // Initialize renderer prior to first draw
+    m_initialized = false;
 }
 
 void QtOpenGLWindow::setTimerApi(TimerApi * timerApi)
@@ -131,6 +157,25 @@ void QtOpenGLWindow::onInitialize()
 
         m_painter->initialize();
     }
+
+    // Initialize renderer
+    if (m_renderer)
+    {
+        // Initialize viewport
+        ViewportComponent * viewportComponent = m_renderer->component<ViewportComponent>();
+        if (viewportComponent)
+        {
+            // Set viewport on renderer
+            qreal factor = QWindow::devicePixelRatio();
+            m_viewport         = glm::vec4(0, 0, (int)(factor * width()), (int)(factor * height()));
+            m_devicePixelRatio = glm::vec2(factor, factor);
+            viewportComponent->m_viewport         = m_viewport;
+            viewportComponent->m_devicePixelRatio = m_devicePixelRatio;
+        }
+
+        // Initialize renderer
+        m_renderer->init();
+    }
 }
 
 void QtOpenGLWindow::onResize(QResizeEvent * event)
@@ -145,6 +190,11 @@ void QtOpenGLWindow::onResize(QResizeEvent * event)
             viewportCapability->setViewport(0, 0, event->size().width(), event->size().height());
         }
     }
+
+    // Update viewport
+    qreal factor = QWindow::devicePixelRatio();
+    m_viewport         = glm::vec4(0, 0, (int)(factor * event->size().width()), (int)(factor * event->size().height()));
+    m_devicePixelRatio = glm::vec2(factor, factor);
 }
 
 void QtOpenGLWindow::onPaint()
@@ -157,12 +207,19 @@ void QtOpenGLWindow::onPaint()
         }
     }
 
+    // Execute rendering
     if (m_painter) {
         // Call painter
         m_painter->paint();
     }
+    else if (m_renderer)
+    {
+        // Call renderer
+        m_renderer->execute();
+    }
     else
     {
+        // Fallback: Draw white background
         qreal factor = QWindow::devicePixelRatio();
 
         gl::glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -277,5 +334,6 @@ void QtOpenGLWindow::wheelEvent(QWheelEvent * event)
         );
     }
 }
+
 
 } // namespace gloperate-qt
