@@ -15,11 +15,13 @@ namespace glop2
 {
 
 
-AbstractStage::AbstractStage(const std::string & name)
+AbstractStage::AbstractStage(const std::string & name, ResourceManager & resourceManager, const std::string & relDataPath)
 : m_enabled(true)
 , m_alwaysProcess(false)
 , m_processScheduled(false)
 , m_name(name)
+, m_resourceManager(resourceManager)
+, m_relDataPath(relDataPath)
 {
     dependenciesChanged.connect([this]()
     {

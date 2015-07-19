@@ -27,9 +27,7 @@ StagePlugin<StageType>::~StagePlugin()
 template <typename StageType>
 gloperate::glop2::AbstractStage * StagePlugin<StageType>::createStage(ResourceManager & resourceManager) const
 {
-	// [TODO]
-//  return new StageType(resourceManager, m_relDataPath);
-	return new StageType();
+    return new StageType(resourceManager, m_relDataPath);
 }
 
 

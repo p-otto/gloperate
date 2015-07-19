@@ -234,32 +234,30 @@ void Viewer::loadRenderer(const std::string & name)
 
     // Unload old renderer
     if (m_renderer.get()) {
-//      m_scriptContext->unregisterObject(m_renderer.get());
+        m_scriptContext->unregisterObject(m_renderer.get());
     }
 
-    // Create new painter
+    // Create new renderer
     m_renderer.reset(stagePlugin->createStage(*m_resourceManager));
 
-    // [TODO] Check for painter context format requirements
+    // [TODO] Check for the stage's context format requirements
 
-    // Setup new painter
+    // Setup new renderer
     m_canvas->setRenderer(m_renderer.get());
 //  m_mapping->setPainter(m_renderer.get());
     m_canvas->initialize();
 
-    // Register painter in scripting
-//  m_scriptContext->registerObject(m_renderer.get());
+    // Register renderer in scripting
+    m_scriptContext->registerObject(m_renderer.get());
 
     // Update property browser
     if (m_renderer.get())
     {
-        /*
         QWidget * old = m_propertyDockWidget->widget();
         delete old;
 
         m_propertyDockWidget->setWidget(new propertyguizeug::PropertyBrowser(m_renderer.get()));
         m_propertyDockWidget->show();
-        */
     }
     else
     {
