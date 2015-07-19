@@ -23,9 +23,11 @@
 
 #include <gloperate/ext-includes-end.h>
 
+#include <gloperate/rendering/AbstractStage.h>
 #include <gloperate/resources/ResourceManager.h>
 #include <gloperate/plugin/PluginManager.h>
 #include <gloperate/plugin/PainterPlugin.h>
+#include <gloperate/plugin/StagePlugin.h>
 
 #ifdef GLOPERATE_ASSIMP_FOUND
     #include <gloperate-assimp/AssimpMeshLoader.h>
@@ -91,6 +93,7 @@ Viewer::Viewer(QWidget * parent, Qt::WindowFlags flags)
 , m_pluginManager{nullptr}
 , m_canvas{nullptr}
 , m_painter{nullptr}
+, m_renderer{nullptr}
 , m_mapping{nullptr}
 , m_messagesStatus{new MessageStatusWidget()}
 , m_messagesLog{new MessageWidget()}
@@ -210,6 +213,53 @@ void Viewer::loadPainter(const std::string & name)
 
         m_propertyDockWidget->setWidget(new propertyguizeug::PropertyBrowser(m_painter.get()));
         m_propertyDockWidget->show();
+    }
+    else
+    {
+        m_propertyDockWidget->hide();
+    }
+
+    // Update rendering
+    m_canvas->updateGL();
+}
+
+void Viewer::loadRenderer(const std::string & name)
+{
+    // Get plugin by name
+    Plugin * plugin = m_pluginManager->plugin(name);
+    AbstractStagePlugin * stagePlugin = plugin ? dynamic_cast<AbstractStagePlugin *>(plugin) : nullptr;
+    if (!stagePlugin) {
+        return;
+    }
+
+    // Unload old renderer
+    if (m_renderer.get()) {
+//      m_scriptContext->unregisterObject(m_renderer.get());
+    }
+
+    // Create new painter
+    m_renderer.reset(stagePlugin->createStage(*m_resourceManager));
+
+    // [TODO] Check for painter context format requirements
+
+    // Setup new painter
+    m_canvas->setRenderer(m_renderer.get());
+//  m_mapping->setPainter(m_renderer.get());
+    m_canvas->initialize();
+
+    // Register painter in scripting
+//  m_scriptContext->registerObject(m_renderer.get());
+
+    // Update property browser
+    if (m_renderer.get())
+    {
+        /*
+        QWidget * old = m_propertyDockWidget->widget();
+        delete old;
+
+        m_propertyDockWidget->setWidget(new propertyguizeug::PropertyBrowser(m_renderer.get()));
+        m_propertyDockWidget->show();
+        */
     }
     else
     {
@@ -444,18 +494,48 @@ void Viewer::setupScripting()
 
 void Viewer::updatePainterMenu()
 {
-    // Clear painter menu
+    // Clear menu
     QMenu * menu = m_ui->painterMenu;
     menu->clear();
 
-    // Add all loaded plugins
+    // Add loaded painter plugins
     for (auto plugin : m_pluginManager->plugins())
     {
+        // Ignore plugin if it is not a painter plugin
+        AbstractPainterPlugin * painterPlugin = dynamic_cast<AbstractPainterPlugin*>(plugin);
+        if (!painterPlugin)
+            continue;
+
         // Add action
         QAction * action = new QAction(QString::fromStdString(plugin->name()), menu);
         action->setData(QString::fromStdString(plugin->name()));
-        connect(action, SIGNAL(toggled(bool)), this, SLOT(onPainterSelected(bool)));
+        connect(action, SIGNAL(toggled(bool)),   this, SLOT(onPainterSelected(bool)));
         connect(action, SIGNAL(triggered(bool)), this, SLOT(onPainterSelected(bool)));
+
+        // Add to menu
+        menu->addAction(action);
+    }
+}
+
+void Viewer::updateRendererMenu()
+{
+    // Clear menu
+    QMenu * menu = m_ui->rendererMenu;
+    menu->clear();
+
+    // Add loaded stage plugins
+    for (auto plugin : m_pluginManager->plugins())
+    {
+        // Ignore plugin if it is not a stage plugin
+        AbstractStagePlugin * stagePlugin = dynamic_cast<AbstractStagePlugin*>(plugin);
+        if (!stagePlugin)
+            continue;
+
+        // Add action
+        QAction * action = new QAction(QString::fromStdString(plugin->name()), menu);
+        action->setData(QString::fromStdString(plugin->name()));
+        connect(action, SIGNAL(toggled(bool)),   this, SLOT(onRendererSelected(bool)));
+        connect(action, SIGNAL(triggered(bool)), this, SLOT(onRendererSelected(bool)));
 
         // Add to menu
         menu->addAction(action);
@@ -490,6 +570,17 @@ void Viewer::onPainterSelected(bool /*checked*/)
     // Get painter name
     QString name = action->data().toString();
     loadPainter(name.toStdString());
+}
+
+void Viewer::onRendererSelected(bool /*checked*/)
+{
+    // Get selected menu action
+    QAction * action = dynamic_cast<QAction*>(QObject::sender());
+    Q_ASSERT(action != nullptr);
+
+    // Get renderer name
+    QString name = action->data().toString();
+    loadRenderer(name.toStdString());
 }
 
 

@@ -35,6 +35,11 @@
      <string>&amp;Painter</string>
     </property>
    </widget>
+   <widget class="QMenu" name="rendererMenu">
+    <property name="title">
+     <string>&amp;Renderer</string>
+    </property>
+   </widget>
    <widget class="QMenu" name="canvasMenu">
     <property name="title">
      <string>Can&amp;vas</string>
@@ -69,6 +74,7 @@
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="painterMenu"/>
+   <addaction name="rendererMenu"/>
    <addaction name="canvasMenu"/>
    <addaction name="cameraMenu"/>
    <addaction name="settingsMenu"/>

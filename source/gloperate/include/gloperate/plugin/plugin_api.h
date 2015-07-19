@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <gloperate/plugin/PainterPlugin.h>
+#include <gloperate/plugin/StagePlugin.h>
 
 
 #ifdef _MSC_VER
@@ -24,6 +25,9 @@
 
 #define GLOPERATE_PAINTER_PLUGIN(CLASS, NAME, DESCRIPTION, VENDOR, VERSION) \
         g_plugins.push_back(new gloperate::PainterPlugin< CLASS >(NAME, DESCRIPTION, VENDOR, VERSION));
+
+#define GLOPERATE_STAGE_PLUGIN(CLASS, NAME, DESCRIPTION, VENDOR, VERSION) \
+        g_plugins.push_back(new gloperate::StagePlugin< CLASS >(NAME, DESCRIPTION, VENDOR, VERSION));
 
 #define GLOPERATE_PLUGIN_LIBRARY_END \
     } \

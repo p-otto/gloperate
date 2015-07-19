@@ -33,6 +33,10 @@ namespace gloperate
     class ResourceManager;
     class PluginManager;
     class Painter;
+    namespace glop2
+    {
+        class AbstractStage;
+    }
 }
 
 
@@ -124,6 +128,22 @@ public:
     //@{
     /**
     *  @brief
+    *    Load renderer
+    *
+    *  @param[in] name
+    *    Name of rendering stage
+    *
+    *  @remarks
+    *    If a stage plugin with this name has been registered,
+    *    the stage is created and loaded into the viewer.
+    *    Otherwise, nothing happens.
+    */
+    void loadRenderer(const std::string & name);
+    //@}
+
+    //@{
+    /**
+    *  @brief
     *    Get scripting context
     *
     *  @return
@@ -158,12 +178,14 @@ protected:
     void setupCanvas();
     void setupScripting();
     void updatePainterMenu();
+    void updateRendererMenu();
 
 
 protected slots:
     void on_managePluginsAction_triggered();
     void on_captureImageAction_triggered();
     void onPainterSelected(bool checked);
+    void onRendererSelected(bool checked);
 
 
 protected:
@@ -173,9 +195,10 @@ protected:
     std::unique_ptr<gloperate::PluginManager>   m_pluginManager;
     std::unique_ptr<scriptzeug::ScriptContext>  m_scriptContext;
 
-    std::unique_ptr<QtOpenGLWindow>     m_canvas;
-    std::unique_ptr<gloperate::Painter> m_painter;
-    std::unique_ptr<DefaultMapping>     m_mapping;
+    std::unique_ptr<QtOpenGLWindow>                  m_canvas;
+    std::unique_ptr<gloperate::Painter>              m_painter;
+    std::unique_ptr<gloperate::glop2::AbstractStage> m_renderer;
+    std::unique_ptr<DefaultMapping>                  m_mapping;
 
     std::unique_ptr<widgetzeug::MessageStatusWidget> m_messagesStatus;
     std::unique_ptr<widgetzeug::MessageWidget>       m_messagesLog;

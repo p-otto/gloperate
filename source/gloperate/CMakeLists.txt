@@ -123,6 +123,7 @@ set(sources
     ${source_path}/plugin/PluginLibrary.cpp
     ${source_path}/plugin/Plugin.cpp
     ${source_path}/plugin/PainterPlugin.cpp
+    ${source_path}/plugin/StagePlugin.cpp
 
     ${source_path}/primitives/AbstractDrawable.cpp
     ${source_path}/primitives/Plane3.cpp
@@ -237,6 +238,8 @@ set(api_includes
     ${include_path}/plugin/Plugin.h
     ${include_path}/plugin/PainterPlugin.h
     ${include_path}/plugin/PainterPlugin.hpp
+    ${include_path}/plugin/StagePlugin.h
+    ${include_path}/plugin/StagePlugin.hpp
     
     ${include_path}/primitives/AbstractDrawable.h
     ${include_path}/primitives/UniformGroup.hpp
