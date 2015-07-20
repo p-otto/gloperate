@@ -23,10 +23,10 @@ namespace glop2
 {
 
 
-Pipeline::Pipeline(const std::string & name)
-:   m_initialized(false)
-,   m_name(name)
-,   m_dependenciesSorted(false)
+Pipeline::Pipeline(const std::string & name, ResourceManager & resourceManager, const std::string & relDataPath)
+: AbstractStage(name, resourceManager, relDataPath)
+, m_initialized(false)
+, m_dependenciesSorted(false)
 {
 }
 
@@ -43,53 +43,38 @@ Pipeline::~Pipeline()
     }
 }
 
-const std::string & Pipeline::name() const
+std::vector<AbstractInputSlot *> Pipeline::allInputs() const
 {
-    return m_name;
+    return flatten(collect(stages(), [] (const AbstractStage * stage)
+    {
+        return stage->allInputs();
+    } ));
 }
 
-void Pipeline::setName(const std::string & name)
+std::vector<AbstractData *> Pipeline::allOutputs() const
 {
-    m_name = name;
+    return flatten(collect(stages(), [] (const AbstractStage * stage)
+    {
+        return stage->allOutputs();
+    } ));
 }
 
-bool Pipeline::hasName() const
+std::vector<AbstractData *> Pipeline::findOutputs(const std::string & name) const
 {
-    return !m_name.empty();
+    return select(allOutputs(), [&name] (AbstractData * data)
+    {
+        return (data->name() == name);
+    } );
 }
 
-std::string Pipeline::asPrintable() const
+const std::vector<AbstractData *> & Pipeline::parameters() const
 {
-    if (!hasName())
-        return "<unnamed>";
-
-    std::string n = name();
-    std::replace(n.begin(), n.end(), ' ', '_');
-
-    return n;
-}
-
-void Pipeline::addStage(AbstractStage * stage)
-{
-    stage->dependenciesChanged.connect([this]() { m_dependenciesSorted = false; });
-    m_stages.push_back(stage);
+    return m_parameters;
 }
 
 void Pipeline::addParameter(AbstractData * parameter)
 {
     m_parameters.push_back(parameter);
-}
-
-void Pipeline::shareData(const AbstractData* data)
-{
-    assert(data != nullptr);
-
-    m_sharedData.push_back(data);
-}
-
-void Pipeline::shareDataFrom(const AbstractInputSlot& slot)
-{
-    shareData(slot.connectedData());
 }
 
 void Pipeline::addParameter(const std::string & name, AbstractData * parameter)
@@ -98,34 +83,53 @@ void Pipeline::addParameter(const std::string & name, AbstractData * parameter)
     addParameter(parameter);
 }
 
+AbstractData * Pipeline::findParameter(const std::string & name) const
+{
+    return detect(m_parameters, [&name] (AbstractData * parameter)
+    {
+        return (parameter->name() == name);
+    }, nullptr);
+}
+
+void Pipeline::shareData(const AbstractData * data)
+{
+    assert(data != nullptr);
+
+    m_sharedData.push_back(data);
+}
+
+void Pipeline::shareDataFrom(const AbstractInputSlot & slot)
+{
+    shareData(slot.connectedData());
+}
+
 const std::vector<AbstractStage *> & Pipeline::stages() const
 {
     return m_stages;
 }
 
-const std::vector<AbstractData *> & Pipeline::parameters() const
+void Pipeline::addStage(AbstractStage * stage)
 {
-    return m_parameters;
+    stage->dependenciesChanged.connect([this]()
+    {
+        m_dependenciesSorted = false;
+    } );
+
+    m_stages.push_back(stage);
 }
 
-std::vector<AbstractInputSlot *> Pipeline::allInputs() const
+bool Pipeline::isInitialized() const
 {
-    return flatten(collect(stages(), [](const AbstractStage * stage) { return stage->allInputs(); }));
+    return m_initialized;
 }
 
-std::vector<AbstractData *> Pipeline::allOutputs() const
+void Pipeline::initialize()
 {
-    return flatten(collect(stages(), [](const AbstractStage * stage) { return stage->allOutputs(); }));
-}
+    if (m_initialized) {
+        return;
+    }
 
-AbstractData * Pipeline::findParameter(const std::string & name) const
-{
-    return detect(m_parameters, [&name](AbstractData * parameter) { return (parameter->name() == name); }, nullptr);
-}
-
-std::vector<AbstractData *> Pipeline::findOutputs(const std::string & name) const
-{
-    return select(allOutputs(), [&name](AbstractData * data) { return (data->name() == name); });
+    m_initialized = initializeStages();
 }
 
 void Pipeline::execute()
@@ -141,46 +145,31 @@ void Pipeline::execute()
     }
 }
 
-bool Pipeline::isInitialized() const
-{
-    return m_initialized;
-}
-
-void Pipeline::initialize()
-{
-    if (m_initialized)
-        return;
-
-    m_initialized = initializeStages();
-}
-
-bool Pipeline::initializeStages()
-{
-    if (!m_dependenciesSorted)
-    {
-        if (!sortDependencies())
-            return false;
-    }
-
-    for (auto & stage : m_stages)
-    {
-        stage->init();
-    }
-
-    return true;
-}
-
 bool Pipeline::sortDependencies()
 {
-    if (m_dependenciesSorted)
+    if (m_dependenciesSorted) {
         return true;
+    }
 
     m_dependenciesSorted = tsort(m_stages);
     return m_dependenciesSorted;
 }
 
-void Pipeline::addStages()
+bool Pipeline::initializeStages()
 {
+    // Make sure that stages are sorted
+    if (!sortDependencies()) {
+        return false;
+    }
+
+    // Initialize all stages
+    for (auto & stage : m_stages)
+    {
+        stage->init();
+    }
+
+    // Done
+    return true;
 }
 
 bool Pipeline::tsort(std::vector<AbstractStage *> & stages)
@@ -189,7 +178,7 @@ bool Pipeline::tsort(std::vector<AbstractStage *> & stages)
     std::vector<AbstractStage *> sorted;
     std::set<AbstractStage *> touched;
 
-    std::function<void(AbstractStage *)> visit = [&](AbstractStage * stage)
+    std::function<void(AbstractStage *)> visit = [&] (AbstractStage * stage)
     {
         if (!couldBeSorted)
         {
