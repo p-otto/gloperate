@@ -79,12 +79,12 @@ public:
     *
     *  @remarks
     *    Do not initialize your graphics object or call any OpenGL functions in the
-    *    constructor, because at this time there may be no valid context active. Instead,
+    *    constructor, because at this time there may be no active context. Instead,
     *    all OpenGL initialization code should be implemented in initialize().
     *    Use the constructor to register properties and capabilities.
     *
     *    When loading external data, always prepend m_relDataPath. While this
-    *    path is usually empty, it can point to the data directory of your plugins,
+    *    path is usually empty, it will point to the data directory of your plugins,
     *    if the painter is loaded as part of a plugin library. To define the
     *    data directory for your plugins, a file named PluginInfo.json is used.
     *
@@ -99,7 +99,7 @@ public:
     virtual ~AbstractStage();
 
     bool hasName() const;
-    const std::string & name() const;
+    std::string name() const;
     void setName(const std::string & name);
 
     bool isEnabled() const;

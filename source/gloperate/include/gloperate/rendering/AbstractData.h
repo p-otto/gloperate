@@ -41,8 +41,9 @@ public:
     virtual std::string type() const = 0;
 
     bool hasName() const;
-    const std::string & name() const;
+    std::string name() const;
     void setName(const std::string & name);
+    std::string qualifiedName() const;
 
     bool hasOwner() const;
     const AbstractStage * owner() const;

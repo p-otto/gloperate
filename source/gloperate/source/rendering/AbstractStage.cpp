@@ -38,9 +38,9 @@ bool AbstractStage::hasName() const
     return !m_name.empty();
 }
 
-const std::string & AbstractStage::name() const
+std::string AbstractStage::name() const
 {
-    return m_name;
+    return (hasName() ? m_name : "<unnamed>");
 }
 
 void AbstractStage::setName(const std::string & name)

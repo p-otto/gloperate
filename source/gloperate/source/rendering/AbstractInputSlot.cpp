@@ -4,7 +4,7 @@
 #include <sstream>
 #include <algorithm>
 
-//#include <gloperate/rendering/AbstractStage.h>
+#include <gloperate/rendering/AbstractStage.h>
 
 
 namespace gloperate
@@ -31,14 +31,28 @@ bool AbstractInputSlot::hasName() const
     return !m_name.empty();
 }
 
-const std::string & AbstractInputSlot::name() const
+std::string AbstractInputSlot::name() const
 {
-    return m_name;
+    return (hasName() ? m_name : "<unnamed>");
 }
 
 void AbstractInputSlot::setName(const std::string & name)
 {
     m_name = name;
+}
+
+std::string AbstractInputSlot::qualifiedName() const
+{
+    std::string name;
+
+    if (hasOwner())
+    {
+        name = m_owner->name() + ".";
+    }
+
+    name += this->name();
+
+    return name;
 }
 
 bool AbstractInputSlot::hasOwner() const

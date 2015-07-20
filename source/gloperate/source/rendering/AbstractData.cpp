@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <sstream>
 
-//#include <gloperate/rendering/AbstractStage.h>
+#include <gloperate/rendering/AbstractStage.h>
 
 
 namespace gloperate
@@ -28,14 +28,28 @@ bool AbstractData::hasName() const
     return !m_name.empty();
 }
 
-const std::string & AbstractData::name() const
+std::string AbstractData::name() const
 {
-    return m_name;
+    return (hasName() ? m_name : "<unnamed>");
 }
 
 void AbstractData::setName(const std::string & name)
 {
     m_name = name;
+}
+
+std::string AbstractData::qualifiedName() const
+{
+    std::string name;
+
+    if (hasOwner())
+    {
+    	name = m_owner->name() + ".";
+    }
+
+    name += this->name();
+
+    return name;
 }
 
 bool AbstractData::hasOwner() const

@@ -17,9 +17,9 @@ void printIncompatibleMessage(
 {
     std::cout
         << "Trying to connect incompatible type "
-        << data.name() << " (" << data.type() << ")"
+        << data.qualifiedName() << " (" << data.type() << ")"
         << " to "
-        << slot->name() << " (" << typeName << ")"
+        << slot->qualifiedName() << " (" << typeName << ")"
         << std::endl;
 }
 
