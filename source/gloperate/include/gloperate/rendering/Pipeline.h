@@ -91,16 +91,16 @@ public:
     virtual void addStage(AbstractStage * stage);
     template<typename... Args> void addStages(AbstractStage * stage, Args... pipeline);
 
-    bool isInitialized() const;
-    void initialize();
 
-    virtual void execute();
+protected:
+    virtual void initialize() override;
+    virtual void process()  override;
 
-
-protected: 
     bool sortDependencies();
     bool initializeStages();
 
+
+protected:
     static bool tsort(std::vector<AbstractStage *> & stages);
 
 

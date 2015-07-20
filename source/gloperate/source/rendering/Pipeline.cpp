@@ -110,17 +110,12 @@ const std::vector<AbstractStage *> & Pipeline::stages() const
 
 void Pipeline::addStage(AbstractStage * stage)
 {
-    stage->dependenciesChanged.connect([this]()
+    stage->dependenciesChanged.connect([this] ()
     {
         m_dependenciesSorted = false;
     } );
 
     m_stages.push_back(stage);
-}
-
-bool Pipeline::isInitialized() const
-{
-    return m_initialized;
 }
 
 void Pipeline::initialize()
@@ -132,7 +127,7 @@ void Pipeline::initialize()
     m_initialized = initializeStages();
 }
 
-void Pipeline::execute()
+void Pipeline::process()
 {
     if (!m_initialized)
     {
