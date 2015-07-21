@@ -20,8 +20,8 @@
 #include <gloperate/painter/AbstractViewportCapability.h>
 #include <gloperate/painter/AbstractInputCapability.h>
 #include <gloperate/rendering/AbstractStage.h>
-#include <gloperate/rendering/ViewportComponent.h>
-#include <gloperate/rendering/VirtualTimeComponent.h>
+#include <gloperate/rendering/components/ViewportComponent.h>
+#include <gloperate/rendering/components/VirtualTimeComponent.h>
 #include <gloperate/resources/ResourceManager.h>
 #include <gloperate/tools/ImageExporter.h>
 
@@ -167,9 +167,11 @@ void QtOpenGLWindow::onInitialize()
         {
             qreal factor = QWindow::devicePixelRatio();
             m_viewport         = glm::vec4(0, 0, (int)(factor * width()), (int)(factor * height()));
+            m_screenSize       = glm::vec2(m_viewport.data().z, m_viewport.data().w);
             m_devicePixelRatio = glm::vec2(factor, factor);
-            viewportComponent->m_viewport         = m_viewport;
-            viewportComponent->m_devicePixelRatio = m_devicePixelRatio;
+            viewportComponent->Viewport         = m_viewport;
+            viewportComponent->ScreenSize       = m_screenSize;
+            viewportComponent->DevicePixelRatio = m_devicePixelRatio;
         }
 
         // Connect virtual time component
@@ -179,9 +181,9 @@ void QtOpenGLWindow::onInitialize()
             m_virtualTime = 0.0f;
             m_timeDelta   = 0.0f;
             m_fps         = 0.0f;
-            virtualTimeComponent->m_virtualTime = m_virtualTime;
-            virtualTimeComponent->m_timeDelta   = m_timeDelta;
-            virtualTimeComponent->m_fps         = m_fps;
+            virtualTimeComponent->VirtualTime = m_virtualTime;
+            virtualTimeComponent->TimeDelta   = m_timeDelta;
+            virtualTimeComponent->Fps         = m_fps;
         }
 
         // Update when manual redraw is triggered
@@ -211,6 +213,7 @@ void QtOpenGLWindow::onResize(QResizeEvent * event)
     // Update viewport
     qreal factor = QWindow::devicePixelRatio();
     m_viewport         = glm::vec4(0, 0, (int)(factor * event->size().width()), (int)(factor * event->size().height()));
+    m_screenSize       = glm::vec2(m_viewport.data().z, m_viewport.data().w);
     m_devicePixelRatio = glm::vec2(factor, factor);
 
     // Trigger redraw

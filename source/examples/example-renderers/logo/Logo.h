@@ -13,8 +13,8 @@
 #include <globjects/Texture.h>
 
 #include <gloperate/rendering/AbstractStage.h>
-#include <gloperate/rendering/ViewportComponent.h>
-#include <gloperate/rendering/VirtualTimeComponent.h>
+#include <gloperate/rendering/components/ViewportComponent.h>
+#include <gloperate/rendering/components/VirtualTimeComponent.h>
 #include <gloperate/painter/Camera.h>
 
 

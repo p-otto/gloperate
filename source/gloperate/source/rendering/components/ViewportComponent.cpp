@@ -1,5 +1,5 @@
 
-#include <gloperate/rendering/ViewportComponent.h>
+#include <gloperate/rendering/components/ViewportComponent.h>
 
 #include <gloperate/rendering/AbstractStage.h>
 
@@ -17,8 +17,9 @@ ViewportComponent::ViewportComponent(AbstractStage & stage)
     m_stage->addComponent(*this);
 
     // Register input slots
-    m_stage->addInput("viewport",         m_viewport);
-    m_stage->addInput("devicePixelRatio", m_devicePixelRatio);
+    m_stage->addInput("Viewport",         Viewport);
+    m_stage->addInput("ScreenSize",       ScreenSize);
+    m_stage->addInput("DevicePixelRatio", DevicePixelRatio);
 }
 
 ViewportComponent::~ViewportComponent()

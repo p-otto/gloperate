@@ -23,8 +23,9 @@ namespace glop2
 class GLOPERATE_API ViewportComponent : public AbstractComponent
 {
 public:
-    InputSlot<glm::vec4> m_viewport;         ///< Viewport coordinates (x, y, w, h) in real device coordinates
-    InputSlot<glm::vec2> m_devicePixelRatio; ///< Ratio of device pixels to virtual pixels (keep in mind that m_viewport is already expressed in device pixels!)
+    InputSlot<glm::vec4> Viewport;         ///< Viewport coordinates (x, y, w, h) in real device coordinates
+    InputSlot<glm::vec2> ScreenSize;       ///< Screen size (w, h) in real device coordinates
+    InputSlot<glm::vec2> DevicePixelRatio; ///< Ratio of device pixels to virtual pixels (keep in mind that m_viewport is already expressed in device pixels!)
 
 
 public:

@@ -130,16 +130,16 @@ void Logo::initialize()
 void Logo::process()
 {
     // [TODO] Add onIdle()/onUpdate() callback and implement framerate independent animation
-    m_angle = m_virtualTimeComponent.m_virtualTime.data();
+    m_angle = m_virtualTimeComponent.VirtualTime.data();
     if (m_angle > 2.0f * glm::pi<float>()) {
         m_angle -= 2.0f * glm::pi<float>();
     }
 
     glViewport(
-        m_viewportComponent.m_viewport.data().x,
-        m_viewportComponent.m_viewport.data().y,
-        m_viewportComponent.m_viewport.data().z,
-        m_viewportComponent.m_viewport.data().w
+        m_viewportComponent.Viewport.data().x,
+        m_viewportComponent.Viewport.data().y,
+        m_viewportComponent.Viewport.data().z,
+        m_viewportComponent.Viewport.data().w
     );
 
     gl::glClearColor(

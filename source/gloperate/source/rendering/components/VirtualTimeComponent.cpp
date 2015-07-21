@@ -1,5 +1,5 @@
 
-#include <gloperate/rendering/VirtualTimeComponent.h>
+#include <gloperate/rendering/components/VirtualTimeComponent.h>
 
 #include <gloperate/rendering/AbstractStage.h>
 
@@ -17,9 +17,9 @@ VirtualTimeComponent::VirtualTimeComponent(AbstractStage & stage)
     m_stage->addComponent(*this);
 
     // Register input slots
-    m_stage->addInput        ("virtualTime", m_virtualTime);
-    m_stage->addInput        ("timeDelta",   m_timeDelta);
-    m_stage->addOptionalInput("fps",         m_fps);
+    m_stage->addInput        ("VirtualTime", VirtualTime);
+    m_stage->addInput        ("TimeDelta",   TimeDelta);
+    m_stage->addOptionalInput("Fps",         Fps);
 }
 
 VirtualTimeComponent::~VirtualTimeComponent()

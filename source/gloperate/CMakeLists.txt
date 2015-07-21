@@ -118,8 +118,9 @@ set(sources
     ${source_path}/rendering/AbstractStage.cpp
     ${source_path}/rendering/Pipeline.cpp
     ${source_path}/rendering/AbstractComponent.cpp
-    ${source_path}/rendering/ViewportComponent.cpp
-    ${source_path}/rendering/VirtualTimeComponent.cpp
+    ${source_path}/rendering/components/ViewportComponent.cpp
+    ${source_path}/rendering/components/VirtualTimeComponent.cpp
+    ${source_path}/rendering/stages/FboStage.cpp
 
     ${source_path}/plugin/PluginManager.cpp
     ${source_path}/plugin/PluginLibrary.cpp
@@ -156,6 +157,8 @@ set(sources
 )
 
 set(api_includes
+    ${include_path}/gloperate_api.h
+
     ${include_path}/base/RenderTarget.h
     ${include_path}/base/directorytraversal.h
     ${include_path}/base/collection.hpp
@@ -163,9 +166,7 @@ set(api_includes
     ${include_path}/base/ChronoTimer.h
     ${include_path}/base/AutoTimer.h
     ${include_path}/base/make_unique.hpp
-    
-    ${include_path}/gloperate_api.h
-    
+        
     ${include_path}/input/MouseEvent.h
     ${include_path}/input/KeyboardEvent.h
     ${include_path}/input/WheelEvent.h
@@ -234,8 +235,9 @@ set(api_includes
     ${include_path}/rendering/Pipeline.h
     ${include_path}/rendering/Pipeline.hpp
     ${include_path}/rendering/AbstractComponent.h
-    ${include_path}/rendering/ViewportComponent.h
-    ${include_path}/rendering/VirtualTimeComponent.h
+    ${include_path}/rendering/components/ViewportComponent.h
+    ${include_path}/rendering/components/VirtualTimeComponent.h
+    ${include_path}/rendering/stages/FboStage.h
     
     ${include_path}/plugin/plugin_api.h
     ${include_path}/plugin/PluginManager.h

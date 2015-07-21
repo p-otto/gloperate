@@ -145,6 +145,7 @@ protected:
     gloperate::ChronoTimer            m_timer;            ///< Time measurement
     TimerApi                        * m_timerApi;         ///< Scripting timer API
     gloperate::glop2::Data<glm::vec4> m_viewport;         ///< Viewport coordinates (x, y, w, h) in real device coordinates
+    gloperate::glop2::Data<glm::vec2> m_screenSize;       ///< Screen size (w, h) in real device coordinates
     gloperate::glop2::Data<glm::vec2> m_devicePixelRatio; ///< Ratio of device pixels to virtual pixels (keep in mind that m_viewport is already expressed in device pixels!)
     gloperate::glop2::Data<float>     m_virtualTime;      ///< Virtual time (in seconds)
     gloperate::glop2::Data<float>     m_timeDelta;        ///< Time difference since the last frame (in seconds)
