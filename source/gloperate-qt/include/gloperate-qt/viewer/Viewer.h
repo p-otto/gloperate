@@ -4,8 +4,6 @@
 
 #include <memory>
 
-#include <scriptzeug/ScriptContext.h>
-
 #include <gloperate/ext-includes-begin.h>
 #include <QScopedPointer>
 #include <QMainWindow>
@@ -15,11 +13,6 @@
 
 
 class Ui_Viewer;
-
-namespace reflectionzeug
-{
-    class Object;
-}
 
 namespace widgetzeug
 {
@@ -46,8 +39,7 @@ namespace gloperate_qt
 
 class QtOpenGLWindow;
 class DefaultMapping;
-class SystemApi;
-class TimerApi;
+class ScriptEnvironment;
 class ViewerApi;
 class PluginApi;
 
@@ -144,29 +136,13 @@ public:
     //@{
     /**
     *  @brief
-    *    Get scripting context
+    *    Get scripting environment
     *
     *  @return
-    *    Script context
+    *    Scripting environment
     */
-    const scriptzeug::ScriptContext * scriptContext() const;
-    scriptzeug::ScriptContext * scriptContext();
-    //@}
-
-    //@{
-    /**
-    *  @brief
-    *    Connect scripting API
-    *
-    *  @param[in] api
-    *    Scripting API
-    *
-    *  @remarks
-    *    This adds an reflectionzeug::Object to the scripting
-    *    context. The name of the object is made available as a
-    *    global variable to access the functions of the object.
-    */
-    void addScriptApi(reflectionzeug::Object * api);
+    const ScriptEnvironment * scriptEnvironment() const;
+    ScriptEnvironment * scriptEnvironment();
     //@}
 
 
@@ -191,27 +167,24 @@ protected slots:
 protected:
     const QScopedPointer<Ui_Viewer> m_ui;
 
-    std::unique_ptr<gloperate::ResourceManager> m_resourceManager;
-    std::unique_ptr<gloperate::PluginManager>   m_pluginManager;
-    std::unique_ptr<scriptzeug::ScriptContext>  m_scriptContext;
+    std::unique_ptr<gloperate::ResourceManager>      m_resourceManager;
+    std::unique_ptr<gloperate::PluginManager>        m_pluginManager;
+    std::unique_ptr<ScriptEnvironment>               m_scriptEnvironment;
+    std::unique_ptr<ViewerApi>                       m_viewerApi;
+    std::unique_ptr<PluginApi>                       m_pluginApi;
 
-    std::unique_ptr<QtOpenGLWindow>                  m_canvas;
     std::unique_ptr<gloperate::Painter>              m_painter;
     std::unique_ptr<gloperate::glop2::AbstractStage> m_renderer;
     std::unique_ptr<DefaultMapping>                  m_mapping;
 
+    std::unique_ptr<QtOpenGLWindow>                  m_canvas;
     std::unique_ptr<widgetzeug::MessageStatusWidget> m_messagesStatus;
     std::unique_ptr<widgetzeug::MessageWidget>       m_messagesLog;
     std::unique_ptr<widgetzeug::ScriptPromptWidget>  m_scriptPrompt;
 
-    QDockWidget * m_messagLogDockWidget;
-    QDockWidget * m_scriptPromptDockWidget;
-    QDockWidget * m_propertyDockWidget;
-
-    std::unique_ptr<SystemApi> m_systemApi;
-    std::unique_ptr<TimerApi>  m_timerApi;
-    std::unique_ptr<ViewerApi> m_viewerApi;
-    std::unique_ptr<PluginApi> m_pluginApi;
+    QDockWidget                                    * m_messagLogDockWidget;
+    QDockWidget                                    * m_scriptPromptDockWidget;
+    QDockWidget                                    * m_propertyDockWidget;
 };
 
 
