@@ -39,7 +39,7 @@ public:
     virtual void process() override;
 
 public:
-    gloperate::InputSlot<gloperate_text::GlyphVertexCloud> vertexCloud;
+    gloperate::InputSlot<std::vector<globjects::ref_ptr<globjects::Texture>>> textures;
     gloperate::InputSlot<gloperate::ResourceManager *> resourceManager;
     
     gloperate::InputSlot<gloperate::AbstractViewportCapability *> viewport;

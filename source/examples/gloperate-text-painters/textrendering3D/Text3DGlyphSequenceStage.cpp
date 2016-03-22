@@ -42,7 +42,7 @@ void Text3DGlyphSequenceStage::process()
     sequences.data()[0].setLineAnchor(gloperate_text::LineAnchor::Center);
 
     sequences.data()[0].setTransform(glm::vec2(0.0f, 0.5f), fontSize, *font.data()
-        , { viewport.data()->width(), viewport.data()->height() }, pixelPerInch, margins);
+        , { 512, 512 }, pixelPerInch, margins);
 
     invalidateOutputs();
 }

@@ -8,11 +8,11 @@
 #include <gloperate-text/Alignment.h>
 #include <gloperate-text/LineAnchor.h>
 #include <gloperate-text/stages/FontImporterStage.h>
-#include <gloperate-text/stages/GlyphPreparationStage.h>
 #include <gloperate-text/stages/GlyphRenderStage.h>
 
 #include "Text3DGlyphSequenceStage.h"
 #include "Text3DRenderStage.h"
+#include "Text3DTexturePreparationStage.h"
 
 namespace
 {
@@ -29,8 +29,8 @@ Text3DPipeline::Text3DPipeline()
 {
     auto fontImport = new gloperate_text::FontImporterStage;
     auto glyphSequence = new Text3DGlyphSequenceStage;
-    auto glyphPreparation = new gloperate_text::GlyphPreparationStage;
-    auto glyphRendering = new Text3DRenderStage;
+    auto texturePreparation = new Text3DTexturePreparationStage;
+    auto sceneRendering = new Text3DRenderStage;
 
     fontImport->resourceManager = resourceManager;
     fontImport->fontFilePath = fontFilename;
@@ -39,22 +39,21 @@ Text3DPipeline::Text3DPipeline()
     glyphSequence->font = fontImport->font;
     glyphSequence->viewport = viewport;
 
-    glyphPreparation->font = fontImport->font;
-    glyphPreparation->sequences = glyphSequence->sequences;
-    glyphPreparation->optimized = gloperate::Data<bool>(false);
+    texturePreparation->font = fontImport->font;
+    texturePreparation->sequences = glyphSequence->sequences;
     
-    glyphRendering->camera = camera;
-    glyphRendering->projection = projection;
-    glyphRendering->resourceManager = resourceManager;
-    glyphRendering->vertexCloud = glyphPreparation->vertexCloud;
-    glyphRendering->viewport = viewport;
-    glyphRendering->targetFramebuffer = targetFBO;
+    sceneRendering->camera = camera;
+    sceneRendering->projection = projection;
+    sceneRendering->resourceManager = resourceManager;
+    sceneRendering->textures = texturePreparation->textures;
+    sceneRendering->viewport = viewport;
+    sceneRendering->targetFramebuffer = targetFBO;
 
     addStages(
         fontImport
     ,   glyphSequence
-    ,   glyphPreparation
-    ,   glyphRendering);
+    ,   texturePreparation
+    ,   sceneRendering);
 }
 
 Text3DPipeline::~Text3DPipeline()

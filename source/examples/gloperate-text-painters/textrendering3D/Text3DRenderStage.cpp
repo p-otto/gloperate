@@ -19,8 +19,10 @@ using gl::GLenum;
 Text3DRenderStage::Text3DRenderStage()
 {
     addInput("resourceManager", resourceManager);
-    addInput("vertexCloud", vertexCloud);
+    addInput("textures", textures);
     addInput("viewport", viewport);
+    addInput("camera", camera);
+    addInput("projection", projection);
     addInput("targetFramebuffer", targetFramebuffer);
 
     alwaysProcess(true);
@@ -32,7 +34,6 @@ Text3DRenderStage::~Text3DRenderStage()
 
 void Text3DRenderStage::initialize()
 {
-    glEnable(GL_DEPTH_TEST);
     glEnable(GLenum::GL_BLEND);
     glBlendFunc(GLenum::GL_SRC_ALPHA, GLenum::GL_ONE_MINUS_SRC_ALPHA);
 
@@ -55,23 +56,23 @@ void Text3DRenderStage::initialize()
 
 void Text3DRenderStage::process()
 {
-    const_cast<globjects::Texture*>(vertexCloud.data().texture())->setParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-    const_cast<globjects::Texture*>(vertexCloud.data().texture())->setParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    gl::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GLenum::GL_DEPTH_TEST);
+    glViewport(viewport.data()->x(), viewport.data()->y(), viewport.data()->width(), viewport.data()->height());
 
     auto FBO = globjects::Framebuffer::defaultFBO();
-
     FBO->bind();
+
+    gl::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_program->use();
 
     m_program->setUniform("modelViewProjection", projection.data()->projection() * camera.data()->view());
     m_program->setUniform("glyphTexture", 0);
-    vertexCloud.data().texture()->bindActive(0);
 
+    int count = 0;
     for (auto& drawable : m_drawables)
     {
+        textures->at(0)->bindActive(0);
         drawable.draw();
     }
 
