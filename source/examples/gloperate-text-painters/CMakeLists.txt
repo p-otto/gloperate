@@ -34,12 +34,23 @@ set(headers
     ${include_path}/textrenderingpipeline/GlyphSequenceDemoStage.h
     ${include_path}/textrenderingpipeline/TextRenderingPipeline.h
     ${include_path}/textrenderingpipeline/TextRenderingPainter.h
+
+    ${include_path}/textrendering3D/Text3DGlyphSequenceStage.h
+    ${include_path}/textrendering3D/Text3DPipeline.h
+    ${include_path}/textrendering3D/Text3DRenderStage.h
+    ${include_path}/textrendering3D/Text3DPainter.h
 )
+
 
 set(sources
     ${source_path}/textrenderingpipeline/GlyphSequenceDemoStage.cpp
     ${source_path}/textrenderingpipeline/TextRenderingPipeline.cpp
     ${source_path}/textrenderingpipeline/TextRenderingPainter.cpp
+    
+    ${source_path}/textrendering3D/Text3DGlyphSequenceStage.cpp
+    ${source_path}/textrendering3D/Text3DPipeline.cpp
+    ${source_path}/textrendering3D/Text3DRenderStage.cpp
+    ${source_path}/textrendering3D/Text3DPainter.cpp
     
     ${source_path}/plugin.cpp
 )
