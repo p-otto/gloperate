@@ -23,6 +23,7 @@ using gl::GLenum;
 Text3DTexturePreparationStage::Text3DTexturePreparationStage()
 {
     addInput("sequences", sequences);
+    addInput("font", font);
 
     addOutput("textures", textures);
 }
