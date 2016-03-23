@@ -62,6 +62,8 @@ void Text3DTexturePreparationStage::process()
         globjects::ref_ptr<globjects::Framebuffer> fbo = new globjects::Framebuffer;
         globjects::ref_ptr<globjects::Texture> tex = globjects::Texture::createDefault(GL_TEXTURE_2D);
         tex->image2D(0, GL_R8, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+        tex->setParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+        tex->setParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         fbo->attachTexture(GLenum::GL_COLOR_ATTACHMENT0, tex);
         fbo->printStatus(true);

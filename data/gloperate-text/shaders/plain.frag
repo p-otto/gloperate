@@ -50,7 +50,7 @@ float aastep4x4s(float t, vec2 uv)
 
 void main()
 {
-    vec2 uv = v_uv * 2.0;
+    vec2 uv = (vec2(1.0)-v_uv.ts) * 2.0;
 
     float s = texture(glyphTexture, uv).r;
     if(s < 0.4)

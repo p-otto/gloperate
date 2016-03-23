@@ -4,9 +4,9 @@ uniform sampler2D glyphs;
 
 in vec2 g_uv;
 
-layout (location = 0) out float out_val;
+layout (location = 0) out vec4 out_color;
 
 void main()
 {
-	out_val = texture(glyphs, g_uv).r;
+    out_color = vec4(vec3(texture(glyphs, g_uv).r),1.0);
 }
