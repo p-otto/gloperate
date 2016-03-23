@@ -8,5 +8,6 @@ layout (location = 0) out vec4 out_color;
 
 void main()
 {
-    out_color = vec4(vec3(texture(glyphs, g_uv).r),1.0);
+    float val = texture(glyphs, g_uv).r;
+    out_color = vec4(vec3(val),1.0);
 }

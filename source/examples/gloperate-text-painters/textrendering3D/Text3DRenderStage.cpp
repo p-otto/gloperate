@@ -45,7 +45,7 @@ void Text3DRenderStage::initialize()
     }
 
     camera.data()->setCenter(glm::vec3(0.0, 1.0, 0.0));
-    camera.data()->setEye(glm::vec3(4.0, 1.0, 0.0));
+    camera.data()->setEye(glm::vec3(0.0, 1.0, 4.0));
 
     m_program = new globjects::Program();
     m_program->attach(
@@ -72,8 +72,12 @@ void Text3DRenderStage::process()
     int count = 0;
     for (auto& drawable : m_drawables)
     {
-        textures->at(0)->bindActive(0);
+        textures->at(count)->bindActive(0);
         drawable.draw();
+        if(++count >= textures->size())
+        {
+            --count;
+        }
     }
 
     m_program->release();

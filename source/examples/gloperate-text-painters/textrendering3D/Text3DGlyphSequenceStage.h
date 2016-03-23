@@ -44,4 +44,7 @@ public:
     gloperate::InputSlot<gloperate::AbstractViewportCapability *> viewport;
 
     gloperate::Data<std::vector<gloperate_text::GlyphSequence>> sequences;
+
+private:
+    std::vector<std::string> m_modelStrings;
 };
