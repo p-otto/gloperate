@@ -47,6 +47,8 @@ public:
     gloperate::InputSlot<gloperate::AbstractPerspectiveProjectionCapability *> projection;
 
     gloperate::InputSlot<gloperate::AbstractTargetFramebufferCapability *> targetFramebuffer;
+    
+    gloperate::InputSlot<bool> opaque;
 
 protected:
     std::unique_ptr<gloperate_text::GlyphRenderer> m_renderer;

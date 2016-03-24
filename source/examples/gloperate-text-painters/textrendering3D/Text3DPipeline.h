@@ -40,6 +40,7 @@ public:
     gloperate::Data<reflectionzeug::FilePath> fontFilename;
 
     gloperate::Data<std::string> string;
+    gloperate::Data<bool> opaque;
 
     gloperate::Data<gloperate::AbstractVirtualTimeCapability *> time;
 
