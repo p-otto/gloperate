@@ -4,8 +4,10 @@ uniform sampler2D glyphTexture;
 uniform bool opaqueWalls;
 
 in vec2 v_uv;
+in vec3 v_normal;
 
 layout (location = 0) out vec4 out_color;
+layout (location = 1) out vec4 out_normal;
 
 float aastep(float t, float value)
 {
@@ -59,4 +61,5 @@ void main()
 
     float a = aastep4x4s(0.5, uv);
     out_color = vec4(vec3(1.0-a), 1.0);
+    out_normal = vec4(v_normal, 1.0);
 }

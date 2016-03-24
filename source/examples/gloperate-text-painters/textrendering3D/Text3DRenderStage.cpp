@@ -23,7 +23,10 @@ Text3DRenderStage::Text3DRenderStage()
     addInput("viewport", viewport);
     addInput("camera", camera);
     addInput("projection", projection);
-    addInput("targetFramebuffer", targetFramebuffer);
+
+    addOutput("color", color);
+    addOutput("normal", normal);
+    addOutput("depth", depth);
 
     alwaysProcess(true);
 }
@@ -52,18 +55,37 @@ void Text3DRenderStage::initialize()
         globjects::Shader::fromFile(GL_VERTEX_SHADER, "data/gloperate-text/shaders/plain.vert"),
         globjects::Shader::fromFile(GL_FRAGMENT_SHADER, "data/gloperate-text/shaders/plain.frag")
     );
+
+    color.data() = globjects::Texture::createDefault(GL_TEXTURE_2D);
+    normal.data() = globjects::Texture::createDefault(GL_TEXTURE_2D);
+    depth.data() = globjects::Texture::createDefault(GL_TEXTURE_2D);
+
+    m_fbo = new globjects::Framebuffer;
+    m_fbo->attachTexture(GL_COLOR_ATTACHMENT0, color.data());
+    m_fbo->attachTexture(GL_COLOR_ATTACHMENT1, normal.data());
+    m_fbo->attachTexture(GL_DEPTH_ATTACHMENT, depth.data());
 }
 
 void Text3DRenderStage::process()
 {
+    if (viewport.hasChanged())
+    {
+        resizeTexture();
+    }
+
     glEnable(GLenum::GL_DEPTH_TEST);
     glBlendEquation(GL_FUNC_ADD);
     glViewport(viewport.data()->x(), viewport.data()->y(), viewport.data()->width(), viewport.data()->height());
 
-    auto FBO = globjects::Framebuffer::defaultFBO();
-    FBO->bind();
+    m_fbo->bind();
+    m_fbo->setDrawBuffers({
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1
+    });
 
-    gl::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    m_fbo->clearBuffer(GL_COLOR, 0, glm::vec4(1.0f));
+    m_fbo->clearBuffer(GL_COLOR, 1, glm::vec4(0.0f));
+    m_fbo->clearBufferfi(GLenum::GL_DEPTH_STENCIL, 0, 1.0f, 0);
 
     m_program->use();
 
@@ -84,5 +106,18 @@ void Text3DRenderStage::process()
 
     m_program->release();
 
-    FBO->unbind();
+    m_fbo->unbind();
+}
+
+void Text3DRenderStage::resizeTexture()
+{
+    auto size = glm::ivec2{
+        viewport.data()->width(), viewport.data()->height()
+    };
+
+    color.data()->image2D(0, GL_RGB8, size, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    normal.data()->image2D(0, GL_RGB32F, size, 0, GL_RGB, GL_FLOAT, nullptr);
+    depth.data()->image2D(0, GL_DEPTH_COMPONENT, size, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
+    m_fbo->printStatus(true);
 }

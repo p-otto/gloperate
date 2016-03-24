@@ -13,6 +13,7 @@
 #include "Text3DGlyphSequenceStage.h"
 #include "Text3DRenderStage.h"
 #include "Text3DTexturePreparationStage.h"
+#include "Text3DPostprocessingStage.h"
 
 namespace
 {
@@ -31,6 +32,7 @@ Text3DPipeline::Text3DPipeline()
     auto glyphSequence = new Text3DGlyphSequenceStage;
     auto texturePreparation = new Text3DTexturePreparationStage;
     auto sceneRendering = new Text3DRenderStage;
+    auto postprocessing = new Text3dPostprocessingStage;
 
     fontImport->resourceManager = resourceManager;
     fontImport->fontFilePath = fontFilename;
@@ -47,13 +49,20 @@ Text3DPipeline::Text3DPipeline()
     sceneRendering->resourceManager = resourceManager;
     sceneRendering->textures = texturePreparation->textures;
     sceneRendering->viewport = viewport;
-    sceneRendering->targetFramebuffer = targetFBO;
+
+    postprocessing->color = sceneRendering->color;
+    postprocessing->normal = sceneRendering->normal;
+    postprocessing->depth = sceneRendering->depth;
+    postprocessing->camera = camera;
+    postprocessing->projection = projection;
+    postprocessing->viewport = viewport;
 
     addStages(
         fontImport
     ,   glyphSequence
     ,   texturePreparation
-    ,   sceneRendering);
+    ,   sceneRendering
+    ,   postprocessing);
 }
 
 Text3DPipeline::~Text3DPipeline()

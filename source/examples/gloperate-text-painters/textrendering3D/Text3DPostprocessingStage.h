@@ -1,14 +1,16 @@
 
 #pragma once
 
+#include <string>
 #include <vector>
+
+#include <glm/fwd.hpp>
 
 #include <gloperate/painter/AbstractTargetFramebufferCapability.h>
 #include <gloperate/painter/AbstractViewportCapability.h>
 #include <gloperate/painter/AbstractCameraCapability.h>
 #include <gloperate/painter/AbstractPerspectiveProjectionCapability.h>
 
-#include <gloperate/resources/ResourceManager.h>
 
 #include <gloperate/pipeline/AbstractStage.h>
 #include <gloperate/pipeline/Data.h>
@@ -17,41 +19,42 @@
 #include <gloperate-text/GlyphVertexCloud.h>
 #include <gloperate-text/GlyphRenderer.h>
 
+namespace globjects
+{
+    class Texture;
+}
+
 namespace gloperate
 {
 
     class AbstractViewportCapability;
     class PolygonalDrawable;
+    class ScreenAlignedQuad;
 
 } // namespace gloperate
 
 
-class Text3DRenderStage : public gloperate::AbstractStage
+class Text3dPostprocessingStage : public gloperate::AbstractStage
 {
 public:
-    Text3DRenderStage();
-    virtual ~Text3DRenderStage();
+    Text3dPostprocessingStage();
+    virtual ~Text3dPostprocessingStage();
 
     virtual void initialize() override;
     virtual void process() override;
 
 public:
-    gloperate::InputSlot<std::vector<globjects::ref_ptr<globjects::Texture>>> textures;
-    gloperate::InputSlot<gloperate::ResourceManager *> resourceManager;
+    gloperate::InputSlot<globjects::ref_ptr<globjects::Texture>> color;
+    gloperate::InputSlot<globjects::ref_ptr<globjects::Texture>> normal;
+    gloperate::InputSlot<globjects::ref_ptr<globjects::Texture>> depth;
     
     gloperate::InputSlot<gloperate::AbstractViewportCapability *> viewport;
     gloperate::InputSlot<gloperate::AbstractCameraCapability *> camera;
     gloperate::InputSlot<gloperate::AbstractPerspectiveProjectionCapability *> projection;
 
-    gloperate::Data<globjects::ref_ptr<globjects::Texture>> color;
-    gloperate::Data<globjects::ref_ptr<globjects::Texture>> normal;
-    gloperate::Data<globjects::ref_ptr<globjects::Texture>> depth;
-
 protected:
-    void resizeTexture();
+    globjects::ref_ptr<gloperate::ScreenAlignedQuad> m_quad;
 
-    globjects::ref_ptr<globjects::Framebuffer> m_fbo;
-    std::unique_ptr<gloperate_text::GlyphRenderer> m_renderer;
-    globjects::ref_ptr<globjects::Program> m_program;
-    std::vector<gloperate::PolygonalDrawable> m_drawables;
+    globjects::ref_ptr<globjects::Texture> m_noise; 
+    globjects::ref_ptr<globjects::Texture> m_kernel;
 };

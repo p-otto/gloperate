@@ -42,8 +42,6 @@ void Text3DTexturePreparationStage::initialize()
         globjects::Shader::fromFile(GL_GEOMETRY_SHADER, gloperate::dataPath() + "/gloperate-text/shaders/glyph.geom"),
         globjects::Shader::fromFile(GL_FRAGMENT_SHADER, gloperate::dataPath() + "/gloperate-text/shaders/copy.frag")
     );
-
-    alwaysProcess(true);
 }
 
 void Text3DTexturePreparationStage::process()

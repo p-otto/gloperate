@@ -1,11 +1,13 @@
 #version 330
 
 layout (location = 0) in vec3 in_origin;
+layout (location = 1) in vec3 in_normal;
 layout (location = 2) in vec3 in_uv;
 
 uniform mat4 modelViewProjection;
 
 out vec2 v_uv;
+out vec3 v_normal;
 
 void main()
 {

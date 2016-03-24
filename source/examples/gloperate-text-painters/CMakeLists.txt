@@ -39,6 +39,7 @@ set(headers
     ${include_path}/textrendering3D/Text3DTexturePreparationStage.h
     ${include_path}/textrendering3D/Text3DPipeline.h
     ${include_path}/textrendering3D/Text3DRenderStage.h
+    ${include_path}/textrendering3D/Text3DPostprocessingStage.h
     ${include_path}/textrendering3D/Text3DPainter.h
 )
 
@@ -52,6 +53,7 @@ set(sources
     ${source_path}/textrendering3D/Text3DTexturePreparationStage.cpp
     ${source_path}/textrendering3D/Text3DPipeline.cpp
     ${source_path}/textrendering3D/Text3DRenderStage.cpp
+    ${source_path}/textrendering3D/Text3DPostprocessingStage.cpp
     ${source_path}/textrendering3D/Text3DPainter.cpp
     
     ${source_path}/plugin.cpp
