@@ -52,7 +52,7 @@ void Text3DGlyphSequenceStage::process()
         sequences.data()[i].setString(stringzeug::encode(curString.data(), stringzeug::Encoding::UTF8));
 
         sequences.data()[i].setWordWrap(true);
-        sequences.data()[i].setLineWidth(512.0f, fontSize, *font.data());
+        sequences.data()[i].setLineWidth(550.0f, fontSize, *font.data());
         sequences.data()[i].setAlignment(gloperate_text::Alignment::LeftAligned);
         sequences.data()[i].setLineAnchor(gloperate_text::LineAnchor::Ascent);
         sequences.data()[i].setTransform(glm::vec2(-1.0f, 1.0f), fontSize, *font.data()
