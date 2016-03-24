@@ -37,7 +37,7 @@ void Text3DRenderStage::initialize()
     glEnable(GLenum::GL_BLEND);
     glBlendFunc(GLenum::GL_SRC_ALPHA, GLenum::GL_ONE_MINUS_SRC_ALPHA);
 
-    auto geometry = resourceManager.data()->load<gloperate::Scene>("datasets/CornellBox-Original2.obj");
+    auto geometry = resourceManager.data()->load<gloperate::Scene>("datasets/CornellBox-Original_skinned.obj");
 
     for(auto& mesh : geometry->meshes())
     {
@@ -57,6 +57,7 @@ void Text3DRenderStage::initialize()
 void Text3DRenderStage::process()
 {
     glEnable(GLenum::GL_DEPTH_TEST);
+    glBlendEquation(GL_FUNC_ADD);
     glViewport(viewport.data()->x(), viewport.data()->y(), viewport.data()->width(), viewport.data()->height());
 
     auto FBO = globjects::Framebuffer::defaultFBO();

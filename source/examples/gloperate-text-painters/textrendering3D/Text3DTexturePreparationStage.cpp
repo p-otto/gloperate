@@ -49,6 +49,7 @@ void Text3DTexturePreparationStage::initialize()
 void Text3DTexturePreparationStage::process()
 {
     glDisable(GLenum::GL_DEPTH_TEST);
+    glBlendEquation(GLenum::GL_MAX);
 
     textures->clear();
 
