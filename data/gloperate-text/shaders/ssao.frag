@@ -2,7 +2,6 @@
 
 in vec2 v_uv;
 
-uniform sampler2D colorTexture;
 uniform sampler2D normalTexture;
 uniform sampler2D depthTexture;
 uniform sampler1D kernelTexture;
@@ -152,7 +151,7 @@ const float intensity = 1.0;
 
 void main()
 {
-    vec2 screenSize = textureSize(colorTexture, 0);
+    vec2 screenSize = textureSize(depthTexture, 0);
 
     vec3 ssaoFactor = ssao(
         v_uv,
@@ -171,5 +170,5 @@ void main()
         normalMatrix
     );
 
-    out_color = vec4(texture(colorTexture, v_uv).rgb * ssaoFactor, 1.0);
+    out_color = vec4(ssaoFactor.x);
 }

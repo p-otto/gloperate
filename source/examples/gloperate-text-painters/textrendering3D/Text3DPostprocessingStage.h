@@ -53,8 +53,19 @@ public:
     gloperate::InputSlot<gloperate::AbstractPerspectiveProjectionCapability *> projection;
 
 protected:
-    globjects::ref_ptr<gloperate::ScreenAlignedQuad> m_quad;
+    void blurSSAO();
+    void resizeTextures();
 
+    globjects::ref_ptr<gloperate::ScreenAlignedQuad> m_ssaoQuad;
+    globjects::ref_ptr<gloperate::ScreenAlignedQuad> m_blurQuad;
+    globjects::ref_ptr<gloperate::ScreenAlignedQuad> m_mixQuad;
+
+    globjects::ref_ptr<globjects::Framebuffer> m_fbo;
+    globjects::ref_ptr<globjects::Framebuffer> m_blitFbo;
     globjects::ref_ptr<globjects::Texture> m_noise; 
     globjects::ref_ptr<globjects::Texture> m_kernel;
+
+    globjects::ref_ptr<globjects::Texture> m_SSAOTexture;
+    globjects::ref_ptr<globjects::Texture> m_tempBlurredTexture;
+    globjects::ref_ptr<globjects::Texture> m_blurredTexture;
 };

@@ -107,6 +107,8 @@ void Text3DRenderStage::process()
     m_program->release();
 
     m_fbo->unbind();
+
+    invalidateOutputs();
 }
 
 void Text3DRenderStage::resizeTexture()

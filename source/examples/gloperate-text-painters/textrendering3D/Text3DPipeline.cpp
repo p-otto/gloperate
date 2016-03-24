@@ -50,6 +50,7 @@ Text3DPipeline::Text3DPipeline()
     sceneRendering->resourceManager = resourceManager;
     sceneRendering->textures = texturePreparation->textures;
     sceneRendering->viewport = viewport;
+    sceneRendering->opaque = opaque;
 
     postprocessing->color = sceneRendering->color;
     postprocessing->normal = sceneRendering->normal;
@@ -57,7 +58,6 @@ Text3DPipeline::Text3DPipeline()
     postprocessing->camera = camera;
     postprocessing->projection = projection;
     postprocessing->viewport = viewport;
-    sceneRendering->opaque = opaque;
 
     addStages(
         fontImport

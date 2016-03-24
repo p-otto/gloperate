@@ -12,5 +12,6 @@ out vec3 v_normal;
 void main()
 {
     v_uv = in_uv.rg;
+    v_normal = in_normal;
     gl_Position = modelViewProjection * vec4(in_origin, 1.0);
 }
