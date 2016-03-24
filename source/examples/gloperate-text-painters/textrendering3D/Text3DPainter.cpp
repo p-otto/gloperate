@@ -41,6 +41,8 @@ Text3DPainter::Text3DPainter(gloperate::ResourceManager & resourceManager, const
     addProperty(createProperty("GlyphSequence", m_pipeline.string));
 
     addProperty(createProperty("Filename", m_pipeline.fontFilename));
+    
+    addProperty(createProperty("Opaque", m_pipeline.opaque));
 
     auto screen = QApplication::primaryScreen();
     assert(screen);

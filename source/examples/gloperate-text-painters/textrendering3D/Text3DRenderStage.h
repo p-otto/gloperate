@@ -42,6 +42,7 @@ public:
     gloperate::InputSlot<gloperate::AbstractViewportCapability *> viewport;
     gloperate::InputSlot<gloperate::AbstractCameraCapability *> camera;
     gloperate::InputSlot<gloperate::AbstractPerspectiveProjectionCapability *> projection;
+    gloperate::InputSlot<bool> opaque;
 
     gloperate::Data<globjects::ref_ptr<globjects::Texture>> color;
     gloperate::Data<globjects::ref_ptr<globjects::Texture>> normal;

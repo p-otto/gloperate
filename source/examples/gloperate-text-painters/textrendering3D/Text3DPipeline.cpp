@@ -25,6 +25,7 @@ Text3DPipeline::Text3DPipeline()
 : resourceManager(nullptr)
 , fontFilename(gloperate::dataPath() + "/gloperate-text/fonts/opensansr36.fnt")
 , string(lorem)
+, opaque(true)
 , targetFBO(nullptr)
 , viewport(nullptr)
 {
@@ -56,6 +57,7 @@ Text3DPipeline::Text3DPipeline()
     postprocessing->camera = camera;
     postprocessing->projection = projection;
     postprocessing->viewport = viewport;
+    sceneRendering->opaque = opaque;
 
     addStages(
         fontImport
