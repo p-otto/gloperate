@@ -69,6 +69,7 @@ void Text3DRenderStage::process()
 
     m_program->setUniform("modelViewProjection", projection.data()->projection() * camera.data()->view());
     m_program->setUniform("glyphTexture", 0);
+    m_program->setUniform("opaqueWalls", 0);
 
     int count = 0;
     for (auto& drawable : m_drawables)
