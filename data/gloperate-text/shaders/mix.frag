@@ -11,6 +11,5 @@ void main()
 {
     vec3 color = texture(colorTexture, v_uv).rgb;
     float occlusion = texture(occlusionTexture, v_uv).r;
-    occlusion = 1.0;
     out_color = vec4(color * occlusion, 1.0);
 }

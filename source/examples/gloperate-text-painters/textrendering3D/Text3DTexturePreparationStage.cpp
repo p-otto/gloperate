@@ -63,6 +63,8 @@ void Text3DTexturePreparationStage::process()
         tex->image2D(0, GL_R8, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
         tex->setParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
         tex->setParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+        tex->setParameter(GLenum::GL_TEXTURE_MAG_FILTER, GLenum::GL_LINEAR);
+        tex->setParameter(GLenum::GL_TEXTURE_MIN_FILTER, GLenum::GL_LINEAR);
 
         fbo->attachTexture(GLenum::GL_COLOR_ATTACHMENT0, tex);
         fbo->printStatus(true);
